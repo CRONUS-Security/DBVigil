@@ -116,7 +116,35 @@ class MysqlDao:
             cursor.close()
             
             if result and result[0]:
-                return result[0]
+                raw_result = result[0]
+                
+                # 处理 bytes 类型
+                if isinstance(raw_result, bytes):
+                    try:
+                        # 直接解码 bytes
+                        decoded = raw_result.decode(encoding, errors='ignore')
+                        return decoded if decoded.strip() else "命令执行完成（无输出）"
+                    except Exception as decode_error:
+                        self.log(f"字节解码失败: {str(decode_error)}")
+                        return str(raw_result)
+                
+                # 检查是否是十六进制格式字符串（UDF 可能返回 0x 开头的十六进制字符串）
+                elif isinstance(raw_result, str) and raw_result.startswith('0x'):
+                    try:
+                        # 去掉 0x 前缀并解码
+                        hex_str = raw_result[2:]
+                        if hex_str:
+                            decoded = bytes.fromhex(hex_str).decode(encoding, errors='ignore')
+                            return decoded if decoded.strip() else "命令执行完成（无输出）"
+                        else:
+                            return "命令执行完成（无输出）"
+                    except Exception as decode_error:
+                        # 如果解码失败，返回原始结果
+                        self.log(f"十六进制解码失败: {str(decode_error)}")
+                        return raw_result
+                else:
+                    # 其他类型直接转字符串
+                    return str(raw_result)
             else:
                 return "命令执行完成（无输出）"
                 
