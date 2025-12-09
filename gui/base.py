@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
+    QFormLayout,
     QTableView,
     QPushButton,
     QMenu,
@@ -13,6 +14,9 @@ from PySide6.QtWidgets import (
     QLabel,
     QComboBox,
     QTextEdit,
+    QCheckBox,
+    QGroupBox,
+    QTabWidget,
 )
 from PySide6.QtCore import Qt, QAbstractTableModel
 from PySide6.QtGui import QAction
