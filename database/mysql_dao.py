@@ -115,7 +115,7 @@ class MysqlDao:
             
             cursor.close()
             
-            if result and result[0]:
+            if result and result[0] is not None:
                 raw_result = result[0]
                 
                 # 处理 bytes 类型
@@ -144,7 +144,8 @@ class MysqlDao:
                         return raw_result
                 else:
                     # 其他类型直接转字符串
-                    return str(raw_result)
+                    result_str = str(raw_result)
+                    return result_str if result_str.strip() else "命令执行完成（无输出）"
             else:
                 return "命令执行完成（无输出）"
                 

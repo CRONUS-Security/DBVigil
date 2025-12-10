@@ -16,11 +16,10 @@
 docker pull mysql:8.0
 
 # 启动容器（关闭 secure-file-priv，允许 UDF 写入）
-docker run -d \
+docker run --rm -d \
   --name mysql-udf-test \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -v mysql_udf_data:/var/lib/mysql \
   mysql:8.0 \
   --default-authentication-plugin=mysql_native_password \
   --secure-file-priv="" \
